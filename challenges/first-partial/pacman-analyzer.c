@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define REPORT_FILE "packages_report.txt"
-
 typedef struct CmdLine{
     char *date;
     char *action;
@@ -71,12 +69,26 @@ struct HashTable *packages;
 
 
 int main(int argc, char **argv) {
-    if (argc < 2) {
-	    printf("Usage:./pacman-analizer.o \n");
-	    return 1;
+    
+    if (argc != 5) {
+        printf("WRONG USAGE \n");
+	    printf("Usage:./pacman-analizer.o -input input_file -report output_file \n");
+	    return 0;
     }
     
-    analizeLog(argv[1], REPORT_FILE);
+    if(strcmp(argv[1],"-input")!=0){
+        printf("WRONG USAGE \n");
+        printf("Usage:./pacman-analizer.o -input input_file -output output_file \n");
+	    return 0;
+    }
+
+    if(strcmp(argv[3],"-report")!=0){
+        printf("WRONG USAGE \n");
+        printf("Usage:./pacman-analizer.o -input input_file -output output_file \n");
+	    return 0;
+    }
+    
+    analizeLog(argv[2], argv[4]);
     
     return 0;
 }
@@ -87,7 +99,7 @@ void analizeLog(char *logFile, char *report) {
 
     FILE *inputFile = fopen(logFile, "r");
     if(inputFile==NULL){
-        printf("The input file [%s] could not be opened.", logFile);
+        printf("The input file [%s] could not be opened.\n", logFile);
         return;
     }
     packages = htCreate(3000);
