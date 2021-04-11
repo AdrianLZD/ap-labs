@@ -32,3 +32,14 @@ How to submit your work
 make submit
 ```
 More details at: [Classify API](../../classify.md)
+
+How to run the code
+=======================
+Use one of the following options to run the code:
+- Run the commands:
+    - gcc -c testLogger.c -o testLogger.o
+    - gcc -c logger.c -o logger.o
+    - gcc testLogger.o logger.o -o main.o
+    - ./main.o
+- Use 'make test'
+
