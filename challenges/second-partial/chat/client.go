@@ -11,25 +11,34 @@ import (
 	"log"
 	"net"
 	"os"
+	"fmt"
 )
 
 //!+
 func main() {
-	conn, err := net.Dial("tcp", "localhost:8000")
+
+	if len(os.Args) != 5 || os.Args[1] != "-user" || os.Args[3] != "-server" {
+		fmt.Println("Wrong Usage. Usage [go run client.go -user <user> -server <server>]")
+		return
+	}
+
+	conn, err := net.Dial("tcp", os.Args[4])
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	username := os.Args[2]
+	fmt.Fprintf(conn, username)
+
 	done := make(chan struct{})
 	go func() {
 		io.Copy(os.Stdout, conn) // NOTE: ignoring errors
-		log.Println("done")
 		done <- struct{}{} // signal the main goroutine
 	}()
 	mustCopy(conn, os.Stdin)
 	conn.Close()
 	<-done // wait for background goroutine to finish
 }
-
 //!-
 
 func mustCopy(dst io.Writer, src io.Reader) {
